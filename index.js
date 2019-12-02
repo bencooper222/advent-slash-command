@@ -1,0 +1,25 @@
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
+const fetch = require("node-fetch");
+
+module.exports = async (req, res) => {
+  const adventData = await (
+    await fetch(process.env.ADVENT_URL, {
+      method: "GET",
+      headers: {
+        Cookie: `session=${process.env.ADVENT_COOKIE}`
+      }
+    })
+  ).json();
+
+  const out = Object.values(adventData.members)
+    .sort((a, b) => -a.local_score + b.local_score)
+    .map(({ name, local_score }, idx) => `${idx + 1}. ${name} - ${local_score}`)
+    .join("\n");
+
+  res.end(
+    JSON.stringify({
+      response_type: "in_channel",
+      text: `\n*Here's the current scoreboard:*\n\n${out}`
+    })
+  );
+};
