@@ -11,15 +11,21 @@ module.exports = async (req, res) => {
     })
   ).json();
 
+  const startTime = 1575176400 * 1000;
+  const totalPossibleStars = 2 * Math.ceil((Date.now() - startTime) / 8.64e7);
+
   const out = Object.values(adventData.members)
     .sort((a, b) => -a.local_score + b.local_score)
-    .map(({ name, local_score }, idx) => `${idx + 1}. ${name} - ${local_score}`)
+    .map(
+      ({ name, local_score, stars }, idx) =>
+        `${idx + 1}. ${name} - *${local_score}*[${stars}]`
+    )
     .join("\n");
 
   res.end(
     JSON.stringify({
       response_type: "in_channel",
-      text: `\n*Here's the current scoreboard:*\n\n${out}`
+      text: `\n*Here's the current scoreboard:*\n(There are ${totalPossibleStars} available stars)\n\n${out}`
     })
   );
 };
