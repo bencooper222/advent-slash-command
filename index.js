@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     })
   ).json();
 
-  const startTime = 1575176400 * 1000;
+  const startTime = 1606798800 * 1000;
   const totalPossibleStars = 2 * Math.ceil((Date.now() - startTime) / 8.64e7);
 
   const out = Object.values(adventData.members)
